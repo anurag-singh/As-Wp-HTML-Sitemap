@@ -27,9 +27,9 @@ class As_Wp_Html_Sitemap_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @var      string    $plugin_name    The ID of this plugin.
+	 * @var      string    $as_wp_html_sitemap    The ID of this plugin.
 	 */
-	private $plugin_name;
+	private $as_wp_html_sitemap;
 
 	/**
 	 * The version of this plugin.
@@ -44,12 +44,12 @@ class As_Wp_Html_Sitemap_Admin {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @param      string    $plugin_name       The name of this plugin.
+	 * @param      string    $as_wp_html_sitemap       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $as_wp_html_sitemap, $version ) {
 
-		$this->plugin_name = $plugin_name;
+		$this->as_wp_html_sitemap = $as_wp_html_sitemap;
 		$this->version = $version;
 
 	}
@@ -73,7 +73,7 @@ class As_Wp_Html_Sitemap_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/as-wp-html-sitemap-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->as_wp_html_sitemap, plugin_dir_url( __FILE__ ) . 'css/as-wp-html-sitemap-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -96,7 +96,7 @@ class As_Wp_Html_Sitemap_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/as-wp-html-sitemap-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->as_wp_html_sitemap, plugin_dir_url( __FILE__ ) . 'js/as-wp-html-sitemap-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
 

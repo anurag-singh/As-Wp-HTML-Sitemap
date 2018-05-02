@@ -30,6 +30,27 @@ class As_Wp_Html_Sitemap_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
+		global $wpdb;
+
+		$postName  = 'Sitemap';				// Post Title
+
+		// Check if post's slug already exists
+		if($wpdb->get_row("SELECT post_name FROM wp_posts WHERE post_name = '" . sanitize_title( $postName ) . "'", 'ARRAY_A')) {
+			$is_slug_exists = TRUE;
+		} else {
+			$is_slug_exists = FALSE;
+		}
+
+
+		if(is_admin()){
+			// Check if post' Title already exits
+		    $post_obj = get_page_by_title($postName);
+
+		    // Create a new post, If post's ID  and post's slug not exists
+		    if(isset($post_obj->ID) && $is_slug_exists == TRUE){
+		    	wp_delete_post( $post_obj->ID, TRUE );
+		    }
+	    }
 
 	}
 

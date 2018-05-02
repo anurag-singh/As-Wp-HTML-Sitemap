@@ -1,4 +1,5 @@
 <?php
+# ref - https://www.ibenic.com/creating-wordpress-menu-pages-oop/
 
 /**
  * The file that defines the core plugin class
@@ -44,9 +45,9 @@ class As_Wp_Html_Sitemap {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+	 * @var      string    $as_wp_html_sitemap    The string used to uniquely identify this plugin.
 	 */
-	protected $plugin_name;
+	protected $as_wp_html_sitemap;
 
 	/**
 	 * The current version of the plugin.
@@ -67,12 +68,12 @@ class As_Wp_Html_Sitemap {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
-			$this->version = PLUGIN_NAME_VERSION;
+		if ( defined( 'AS_WP_HTML_SITEMAP' ) ) {
+			$this->version = AS_WP_HTML_SITEMAP;
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'as-wp-html-sitemap';
+		$this->as_wp_html_sitemap = 'as-wp-html-sitemap';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -116,11 +117,14 @@ class As_Wp_Html_Sitemap {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-as-wp-html-sitemap-admin.php';
 
+
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-as-wp-html-sitemap-public.php';
+
+
 
 		$this->loader = new As_Wp_Html_Sitemap_Loader();
 
@@ -152,10 +156,11 @@ class As_Wp_Html_Sitemap {
 	 */
 	private function define_admin_hooks() {
 
-		// $plugin_admin = new As_Wp_Html_Sitemap_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new As_Wp_Html_Sitemap_Admin( $this->get_as_wp_html_sitemap(), $this->get_version() );
 
-		// $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		// $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+
 
 	}
 
@@ -168,10 +173,11 @@ class As_Wp_Html_Sitemap {
 	 */
 	private function define_public_hooks() {
 
-		// $plugin_public = new As_Wp_Html_Sitemap_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new As_Wp_Html_Sitemap_Public( $this->get_as_wp_html_sitemap(), $this->get_version() );
 
-		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_shortcode( 'shortcode', $plugin_public, 'render_shortcode' );
 
 	}
 
@@ -191,8 +197,8 @@ class As_Wp_Html_Sitemap {
 	 * @since     1.0.0
 	 * @return    string    The name of the plugin.
 	 */
-	public function get_plugin_name() {
-		return $this->plugin_name;
+	public function get_as_wp_html_sitemap() {
+		return $this->as_wp_html_sitemap;
 	}
 
 	/**
@@ -213,6 +219,38 @@ class As_Wp_Html_Sitemap {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * Convert text into sanitize text.
+	 * Replace all black space (' ') with '-'
+	 * lowercase all characters
+	 * @since     1.0.0
+	 * @return    string
+	 */
+	private function get_sanitized_labels($text) {
+		$name = ucwords(strtolower(preg_replace('/\s+/', ' ', $text) ));
+		$slug = strtolower(sanitize_title( $text ) );
+
+		$single = ucfirst($name);
+
+		$last_character = substr($single, -1);
+
+		if ($last_character === 'y') {
+			$plural = substr_replace($single, 'ies', -1);
+		}
+		else {
+			$plural = $single.'s'; // add 's' to convert singular name to plural
+		}
+
+		$response = array(
+						'name'		=>	$name,
+						'single' 	=> 	$single,
+						'plural' 	=> 	$plural,
+						'slug'		=> 	$slug
+					);
+
+		return $response;
 	}
 
 }
