@@ -33,7 +33,7 @@ class As_Wp_Html_Sitemap_Activator {
 		global $wpdb;
 
 		$postName  = 'Sitemap';				// Post Title
-		$postContent = '[sitemap]';			// Post Content
+		$postContent = '[html_sitemap]';			// Post Content
 
 		// Check if post's slug already exists
 		if($wpdb->get_row("SELECT post_name FROM wp_posts WHERE post_name = '" . sanitize_title( $postName ) . "'", 'ARRAY_A')) {
@@ -62,7 +62,7 @@ class As_Wp_Html_Sitemap_Activator {
 		        $page_id = wp_insert_post($sitemap_page);
 		    }
 	    }
-		
+
 	}
 
 }
