@@ -118,7 +118,15 @@ class As_Wp_Html_Sitemap_Public {
 			// Convert array into string
 			$pageIdsTobeExclude = implode(',', $pageIdsTobeExclude);
 		} else {
-			$pageIdsTobeExclude = '';
+			$pageToBeExclude = array('Sitemap');
+
+			foreach ($pageToBeExclude as $page) {
+				$pageObj = get_page_by_title( $page );
+
+				$pageIdsTobeExclude[] = $pageObj->ID;
+			}
+
+			$pageIdsTobeExclude = implode(',', $pageIdsTobeExclude);
 		}
 
 	    $pageArgArr = shortcode_atts(array(
